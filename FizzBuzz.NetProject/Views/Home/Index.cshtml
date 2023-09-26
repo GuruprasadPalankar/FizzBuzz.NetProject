@@ -1,0 +1,75 @@
+﻿@model FizzBuzz.NetProject.Models.FizzBuzzModel
+
+@{
+    Layout = null;
+}
+
+@using PagedList;
+@using PagedList.Mvc;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+    <style>
+        .fizz {
+            color: blue
+        }
+
+        .buzz {
+            color: green
+        }
+    </style>
+</head>
+
+
+<body>
+    <h2><font face="timesnewroman" color="darkblue">This is FizzBuzz Project!!!</font></h2>
+
+    <div>
+        <section>
+            @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+            {
+                <text><font face="timesnewroman" color="darkviolet">Please enter a number:</font></text> @Html.EditorFor(x => x.InputNumber)
+                <br />
+                <font color="red">@Html.ValidationMessageFor(x => x.InputNumber)</font>
+                <br />
+                <input type="submit" value="Submit" style="background-color:deeppink; border-color: black; color: white" class="btn btn-default" />
+                <br />
+            }
+        </section>
+    </div>
+
+    <div>
+        @if (Model.ResultList != null)
+        {
+            <h2><font face="timesnewroman" color="blue">This is the Result!!!</font></h2>
+            <ul>
+                @foreach (var i in Model.ResultList)
+                {
+                    <li>
+                        @{
+                            var words = i.Split(' ');
+                            if (words.Count() > 1)
+                            {
+                                foreach (var word in words)
+                                {
+                                    <span class="@word">@word</span>
+                                }
+                            }
+                            else
+                            {
+                                <p class="@i">@i</p>
+                            }
+                         }
+                    </li>
+                }
+            </ul>
+            @Html.PagedListPager((IPagedList)Model.ResultList, currentPageNumber => Url.Action("Index", "Home", new { currentPageNumber, InputNumber = Model.InputNumber}))
+        }
+    </div>
+</body>
+</html>
